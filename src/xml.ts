@@ -21,7 +21,7 @@ type SelectedValue = string | number | boolean | Node;
 
 const SHA384 = function (this: any) {
   this.getHash = function(xml: string): string {
-    console.log('USEEEEEEEEEEEEEEE222: ', this);
+    console.log('USEEEEEEEEEEEEEEE: ', this);
     const shasum = createHash('sha384');
     shasum.update(xml, 'utf8');
     const res = shasum.digest('base64');
