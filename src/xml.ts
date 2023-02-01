@@ -19,7 +19,7 @@ import {BinaryLike} from "crypto";
 
 type SelectedValue = string | number | boolean | Node;
 
-const SHA384 = function () {
+const SHA384 = function (this: any) {
   this.getHash = function(xml: string): string {
     console.log('USEEEEEEEEEEEEEEE222: ', this);
     const shasum = createHash('sha384');
@@ -33,7 +33,7 @@ const SHA384 = function () {
   };
 };
 
-const ECDSASHA384 = function () {
+const ECDSASHA384 = function (this: any) {
   /*sign the given SignedInfo using the key. return base64 signature value*/
   this.getSignature = function (signedInfo: BinaryLike, signingKey: Buffer, callback?: (arg0: null, arg1: string) => void): string {
     const signer = createSign("sha384");
