@@ -15,15 +15,16 @@ import {
 import * as algorithms from "./algorithms";
 import { assertRequired } from "./utility";
 import { certToPEM, createHash, createSign, createVerify } from "./crypto";
+import {BinaryLike} from "crypto";
 
 type SelectedValue = string | number | boolean | Node;
 
 const SHA384 = function () {
   this.getHash = function(xml: string): string {
-    console.log('USEEEEEEEEEEEEEEE222');
-    var shasum = createHash('sha384');
+    console.log('USEEEEEEEEEEEEEEE222: ', this);
+    const shasum = createHash('sha384');
     shasum.update(xml, 'utf8');
-    var res = shasum.digest('base64');
+    const res = shasum.digest('base64');
     return res;
   };
 
@@ -34,10 +35,10 @@ const SHA384 = function () {
 
 const ECDSASHA384 = function () {
   /*sign the given SignedInfo using the key. return base64 signature value*/
-  this.getSignature = function (signedInfo: Node, signingKey: Buffer, callback?: Function): string {
-    var signer = createSign("sha384");
+  this.getSignature = function (signedInfo: BinaryLike, signingKey: Buffer, callback?: (arg0: null, arg1: string) => void): string {
+    const signer = createSign("sha384");
     signer.update(signedInfo);
-    var res = signer.sign(signingKey, 'base64');
+    const res = signer.sign(signingKey, 'base64');
 
     if (callback) callback(null, res);
     return res;
@@ -47,7 +48,7 @@ const ECDSASHA384 = function () {
   * Verify the given signature of the given string using key
   *
   */
-  this.verifySignature = function (str: string, key: Buffer, signatureValue: NodeJS.ArrayBufferView | string, callback?: Function): boolean {
+  this.verifySignature = function (str: string, key: Buffer, signatureValue: string, callback?: (arg0: null, arg1: boolean) => void): boolean {
     console.log('PREEE VERIFY str: ')
     // console.log(str)
     // console.log('PREEE VERIFY key: ')
@@ -68,7 +69,9 @@ const ECDSASHA384 = function () {
   };
 };
 
-xmlCrypto.SignedXml.SignatureAlgorithms['http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384'] = ECDSASHA384;
+// @ts-ignore
+xmlCrypto.SignedXml.SignatureAlgorithms["http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"] = ECDSASHA384;
+// @ts-ignore
 xmlCrypto.SignedXml.HashAlgorithms['http://www.w3.org/2001/04/xmlenc#sha384'] = SHA384;
 
 const selectXPath = <T extends SelectedValue>(

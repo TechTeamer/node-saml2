@@ -51,7 +51,7 @@ export const createHash = (algorithm: string): crypto.Hash => {
   return crypto.createHash(algorithm);
 }
 
-export const createSign = (algorithm: string): crypto.Sign => {
+export const createSign = (algorithm: string) => {
   return crypto.createSign(algorithm);
 }
 
