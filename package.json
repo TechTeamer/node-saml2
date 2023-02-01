@@ -1,5 +1,5 @@
 {
-  "name": "@techteamer/node-saml2",
+  "name": "@node-saml/node-saml",
   "version": "4.0.3",
   "description": "SAML 2.0 implementation for Node.js",
   "keywords": [

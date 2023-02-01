@@ -21,7 +21,6 @@ type SelectedValue = string | number | boolean | Node;
 
 const SHA384 = function (this: any) {
   this.getHash = function(xml: string): string {
-    console.log('USEEEEEEEEEEEEEEE: ', this);
     const shasum = createHash('sha384');
     shasum.update(xml, 'utf8');
     const res = shasum.digest('base64');
@@ -49,17 +48,9 @@ const ECDSASHA384 = function (this: any) {
   *
   */
   this.verifySignature = function (str: string, key: Buffer, signatureValue: string, callback?: (arg0: null, arg1: boolean) => void): boolean {
-    console.log('PREEE VERIFY str: ')
-    // console.log(str)
-    // console.log('PREEE VERIFY key: ')
-    // console.log(key)
-    // console.log('PREEE VERIFY signatureValue: ')
-    // console.log(signatureValue)
     const hasher = createVerify("sha384");
 
     const res = hasher.update(str).verify(key, signatureValue, 'base64');
-    // console.log('VERIFY: ', res);
-
     if (callback) callback(null, res);
     return res;
   };
