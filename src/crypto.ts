@@ -46,3 +46,15 @@ export const removeCertPEMHeaderAndFooter = (certificate: string): string => {
   certificate = certificate.replace(/\r\n/g, "\n");
   return certificate;
 };
+
+export const createHash = (algorithm: string): crypto.Hash => {
+  return crypto.createHash(algorithm);
+}
+
+export const createSign = (algorithm: string) => {
+  return crypto.createSign(algorithm);
+}
+
+export const createVerify = (algorithm: string): crypto.Verify => {
+  return crypto.createVerify(algorithm);
+}

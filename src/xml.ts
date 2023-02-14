@@ -14,9 +14,56 @@ import {
 } from "./types";
 import * as algorithms from "./algorithms";
 import { assertRequired } from "./utility";
-import { certToPEM } from "./crypto";
+import { certToPEM, createHash, createSign, createVerify } from "./crypto";
+import {BinaryLike} from "crypto";
 
 type SelectedValue = string | number | boolean | Node;
+
+const SHA384 = function (this: any) {
+  this.getHash = function(xml: string): string {
+    const shasum = createHash('sha384');
+    shasum.update(xml, 'utf8');
+    const res = shasum.digest('base64');
+    return res;
+  };
+
+  this.getAlgorithmName = function () {
+    return "http://www.w3.org/2001/04/xmlenc#sha384";
+  };
+};
+
+const ECDSASHA384 = function (this: any) {
+  /*sign the given SignedInfo using the key. return base64 signature value*/
+  this.getSignature = function (signedInfo: BinaryLike, signingKey: Buffer, callback?: (arg0: null, arg1: string) => void): string {
+    const signer = createSign("sha384");
+    signer.update(signedInfo);
+    const res = signer.sign(signingKey, 'base64');
+
+    if (callback) callback(null, res);
+    return res;
+  };
+
+  /**
+  * Verify the given signature of the given string using key
+  *
+  */
+  this.verifySignature = function (str: string, key: Buffer, signatureValue: string, callback?: (arg0: null, arg1: boolean) => void): boolean {
+    const hasher = createVerify("sha384");
+
+    const res = hasher.update(str).verify(key, signatureValue, 'base64');
+    if (callback) callback(null, res);
+    return res;
+  };
+
+  this.getAlgorithmName = function () {
+    return 'http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384';
+  };
+};
+
+// @ts-ignore
+xmlCrypto.SignedXml.SignatureAlgorithms["http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"] = ECDSASHA384;
+// @ts-ignore
+xmlCrypto.SignedXml.HashAlgorithms['http://www.w3.org/2001/04/xmlenc#sha384'] = SHA384;
 
 const selectXPath = <T extends SelectedValue>(
   guard: (values: SelectedValue[]) => values is T[],
