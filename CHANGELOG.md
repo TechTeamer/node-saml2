@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.0 (2023-02-14)
+
+- add ecdsa-384 support
+
+---
+
 ## v4.0.3 (2022-12-13)
 
 #### 🔗 Dependencies:
