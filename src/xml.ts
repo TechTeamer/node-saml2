@@ -60,8 +60,68 @@ const ECDSASHA384 = function (this: any) {
   };
 };
 
+const ECDSASHA256 = function (this: any) {
+  /*sign the given SignedInfo using the key. return base64 signature value*/
+  this.getSignature = function (signedInfo: BinaryLike, signingKey: Buffer, callback?: (arg0: null, arg1: string) => void): string {
+    const signer = createSign("sha256");
+    signer.update(signedInfo);
+    const res = signer.sign(signingKey, 'base64');
+
+    if (callback) callback(null, res);
+    return res;
+  };
+
+  /**
+   * Verify the given signature of the given string using key
+   *
+   */
+  this.verifySignature = function (str: string, key: Buffer, signatureValue: string, callback?: (arg0: null, arg1: boolean) => void): boolean {
+    const hasher = createVerify("sha256");
+
+    const res = hasher.update(str).verify(key, signatureValue, 'base64');
+    if (callback) callback(null, res);
+    return res;
+  };
+
+  this.getAlgorithmName = function () {
+    return 'http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256';
+  };
+};
+
+const RSASHA384 = function (this: any) {
+  /*sign the given SignedInfo using the key. return base64 signature value*/
+  this.getSignature = function (signedInfo: BinaryLike, signingKey: Buffer, callback?: (arg0: null, arg1: string) => void): string {
+    const signer = createSign("RSA-SHA384");
+    signer.update(signedInfo);
+    const res = signer.sign(signingKey, 'base64');
+
+    if (callback) callback(null, res);
+    return res;
+  };
+
+  /**
+   * Verify the given signature of the given string using key
+   *
+   */
+  this.verifySignature = function (str: string, key: Buffer, signatureValue: string, callback?: (arg0: null, arg1: boolean) => void): boolean {
+    const hasher = createVerify("RSA-SHA384");
+
+    const res = hasher.update(str).verify(key, signatureValue, 'base64');
+    if (callback) callback(null, res);
+    return res;
+  };
+
+  this.getAlgorithmName = function () {
+    return 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha384';
+  };
+};
+
 // @ts-ignore
 xmlCrypto.SignedXml.SignatureAlgorithms["http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"] = ECDSASHA384;
+// @ts-ignore
+xmlCrypto.SignedXml.SignatureAlgorithms["http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"] = ECDSASHA256;
+// @ts-ignore
+xmlCrypto.SignedXml.SignatureAlgorithms["http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"] = RSASHA384;
 // @ts-ignore
 xmlCrypto.SignedXml.HashAlgorithms['http://www.w3.org/2001/04/xmlenc#sha384'] = SHA384;
 
@@ -172,6 +232,7 @@ export const validateXmlSignatureForCert = (
 ): boolean => {
   const sig = new xmlCrypto.SignedXml();
   sig.keyInfoProvider = {
+    // @ts-ignore
     file: "",
     getKeyInfo: () => "<X509Data></X509Data>",
     getKey: () => Buffer.from(certPem),

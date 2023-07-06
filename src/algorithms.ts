@@ -4,6 +4,10 @@ export function getSigningAlgorithm(shortName?: string): string {
   switch (shortName) {
     case "ecdsa-sha384":
       return "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384";
+    case "ecdsa-sha256":
+      return "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256";
+    case "sha384":
+      return "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384";
     case "sha256":
       return "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
     case "sha512":
@@ -32,6 +36,10 @@ export function getSigner(shortName?: string): crypto.Signer {
   switch (shortName) {
     case "ecdsa-sha384":
       return crypto.createSign("sha384");
+    case "ecdsa-sha256":
+      return crypto.createSign("sha256");
+    case "sha384":
+      return crypto.createSign("RSA-SHA384");
     case "sha256":
       return crypto.createSign("RSA-SHA256");
     case "sha512":
